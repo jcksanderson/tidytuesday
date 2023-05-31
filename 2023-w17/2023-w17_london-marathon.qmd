@@ -1,0 +1,73 @@
+---
+title: "2023-w17"
+format: gfm
+---
+
+```{r}
+#| label: setup
+library(tidyverse)
+```
+
+```{r}
+#| label: import-data
+winners <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-04-25/winners.csv')
+london_marathon <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-04-25/london_marathon.csv')
+```
+
+```{r}
+#| label: convert-to-factor
+winners <- winners %>% 
+  filter(Category %in% c("Men", "Women")) %>% 
+  mutate(Nationality = as.factor(Nationality))
+```
+
+```{r}
+#| label: plot
+#| fig-width: 10
+#| fig-asp: 0.666
+plot <- ggplot(winners, aes(y = fct_rev(fct_infreq(Nationality)), fill = Category)) +
+  geom_bar(
+  ) +
+  labs(
+    title = "London Marathon Winners by Country",
+    subtitle = "through 2022",
+    x = "# of Winners",
+    y = NULL,
+    fill = "Gender"
+  ) +
+  scale_x_discrete(
+    breaks = c(5, 10, 15, 20, 25, 30),
+    limits = c(5, 10, 15, 20, 25, 30),
+    expand = c(0,0)
+  ) +
+  theme(
+    plot.background = element_rect(color = "gray10", fill = "gray10"),
+    panel.background = element_rect(color = NULL, fill = "gray10"),
+    
+    legend.background = element_rect(color = NULL, fill = "gray10"),
+    legend.key = element_blank(),
+    
+    panel.grid = element_line(color = "gray30"),
+    axis.text = element_text(color = "gray50",
+                               family = "Space Grotesk"),
+    axis.ticks = element_blank(),
+    axis.title = element_text(color = "white",
+                              family = "Space Grotesk"),
+    
+    legend.title = element_text(color = "white",
+                                family = "Space Grotesk"),
+    legend.text = element_text(color = "white",
+                               family = "Space Grotesk"),
+    
+    plot.title.position = "plot",
+    plot.title = element_text(color = "white",
+                              size = 20,
+                              family = "Space Grotesk Bold"),
+    plot.subtitle = element_text(color = "gray90",
+                                 size = 12.5,
+                                 family = "Space Grotesk"),
+    plot.margin = margin(10, 10, 10, 10)
+  )
+plot
+```
+
